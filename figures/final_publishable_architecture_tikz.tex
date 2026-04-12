@@ -1,0 +1,91 @@
+% Final publishable multimodal architecture for ACL/EMNLP-style manuscript.
+\begin{tikzpicture}[
+    x=1cm,
+    y=1cm,
+    font=\footnotesize,
+    >=Latex,
+    textbox/.style={draw=textclr, fill=textclr!12, rounded corners=2pt, thick, minimum width=2.3cm, minimum height=0.95cm, align=center},
+    audiobox/.style={draw=audioclr, fill=audioclr!12, rounded corners=2pt, thick, minimum width=2.3cm, minimum height=0.95cm, align=center},
+    videobox/.style={draw=videoclr, fill=videoclr!12, rounded corners=2pt, thick, minimum width=2.3cm, minimum height=0.95cm, align=center},
+    module/.style={draw=black!65, fill=white, rounded corners=3pt, thick, minimum width=2.85cm, minimum height=1.05cm, align=center},
+    fusionbox/.style={draw=fusionclr, fill=fusionclr!14, rounded corners=4pt, thick, minimum width=3.7cm, minimum height=1.2cm, align=center},
+    predbox/.style={draw=predclr, fill=predclr!14, rounded corners=3pt, thick, minimum width=2.95cm, minimum height=1.05cm, align=center},
+    controlbox/.style={draw=black!70, fill=gray!8, rounded corners=3pt, thick, dashed, minimum width=4.4cm, minimum height=1.2cm, align=center},
+    flow/.style={->, thick},
+    auxflow/.style={->, thick, dashed}
+]
+
+% Phase bands.
+\node[draw=black!30, fill=orange!18, rounded corners=2pt, minimum width=8.7cm, minimum height=0.6cm] (phase1) at (3.8, 4.0) {Multimodal Feature Extraction and Alignment};
+\node[draw=black!30, fill=blue!10, rounded corners=2pt, minimum width=5.6cm, minimum height=0.6cm] (phase2) at (10.6, 4.0) {Fusion and Temporal Modeling};
+\node[draw=black!30, fill=green!15, rounded corners=2pt, minimum width=4.1cm, minimum height=0.6cm] (phase3) at (14.7, 4.0) {Prediction and Calibration};
+
+% Inputs.
+\node[textbox] (text_in) at (0.0, 2.2) {Text Input\\Transcript};
+\node[audiobox] (audio_in) at (0.0, 0.0) {Audio Input\\Speech Waveform};
+\node[videobox] (video_in) at (0.0, -2.2) {Video Input\\Frame Sequence};
+
+% Modality encoders.
+\node[module] (text_enc) at (2.9, 2.2) {Text Encoder\\Prompt + RAG};
+\node[module] (audio_enc) at (2.9, 0.0) {HuBERT Encoder};
+\node[module] (video_enc) at (2.9, -2.2) {Visual Context Encoder};
+
+% Bridge and expert outputs.
+\node[module] (text_exp) at (5.8, 2.2) {Text Specialist\\Logits};
+\node[module] (audio_proj) at (5.8, 0.0) {Audio Projector\\Perceiver / Concat};
+\node[module] (video_exp) at (5.8, -2.2) {Visual Specialist\\Logits};
+
+% Core fusion path.
+\node[fusionbox] (fusion) at (9.1, 0.8) {Shared Multimodal Fusion\\CLS Merge + Cross-Modal Attention};
+\node[module, minimum width=2.95cm] (mean_pool) at (8.2, -0.9) {Global Mean Pooling\\Single Audio Token};
+\node[fusionbox, minimum width=3.2cm] (temporal) at (12.1, 0.8) {Temporal Compression\\TCN / Latent Bottleneck};
+\node[predbox, minimum width=2.8cm] (direct_head) at (15.0, 0.8) {Direct Multimodal\\Logits};
+
+% Late fusion path.
+\node[fusionbox, minimum width=4.2cm] (stacker) at (12.9, -3.15) {Transfer-Aware Logit Stacker\\Logistic Meta-Learner};
+\node[predbox] (pred) at (16.2, -3.15) {Final Emotion Prediction\\7-way Softmax};
+
+% Robustness controls.
+\node[controlbox, minimum width=4.2cm] (robust) at (7.6, -4.35) {Robustness Controls\\Class-aware sampling + weighted/focal loss\\Minority-aware checkpointing};
+\node[module, minimum width=3.1cm] (substring_parser) at (12.9, -4.35) {Substring Parser\\Fallback Suppression};
+
+% Main flows.
+\draw[flow] (text_in) -- (text_enc);
+\draw[flow] (audio_in) -- (audio_enc);
+\draw[flow] (video_in) -- (video_enc);
+
+\draw[flow] (text_enc) -- (text_exp);
+\draw[flow] (audio_enc) -- (audio_proj);
+\draw[flow] (video_enc) -- (video_exp);
+
+\draw[flow] (text_exp) -- (fusion);
+\draw[flow] (audio_proj) -- (mean_pool);
+\draw[flow] (mean_pool) -- (fusion);
+\draw[flow] (video_exp) -- (fusion);
+\draw[flow] (fusion) -- (temporal);
+\draw[flow] (temporal) -- (direct_head);
+
+\draw[flow] (text_exp.east) -- ($(text_exp.east)+(9.5,0)$) |- ($(stacker.east)+(0,0.35)$) -- (stacker.east);
+\draw[flow] (video_exp.west) -- ($(video_exp.west)+(-1.2,0)$) |- ($(stacker.west)+(0,-0.35)$) -- (stacker.west);
+\draw[flow] (direct_head.east) -- ++(0.85,0) |- (pred.north);
+\draw[flow] (stacker) -- (pred);
+
+% Control links.
+\draw[auxflow] (robust.north) -- (temporal.south);
+\draw[auxflow] (robust.north east) -- (stacker.south);
+\draw[auxflow] (robust.east) -- (substring_parser.west);
+\draw[auxflow] (substring_parser.north) -- (pred.south);
+
+% Legend.
+\node[textbox, minimum width=0.55cm, minimum height=0.4cm] (l1) at (1.0, -5.8) {};
+\node[anchor=west] at (1.45, -5.8) {Text path};
+\node[audiobox, minimum width=0.55cm, minimum height=0.4cm] (l2) at (4.0, -5.8) {};
+\node[anchor=west] at (4.45, -5.8) {Audio path};
+\node[videobox, minimum width=0.55cm, minimum height=0.4cm] (l3) at (6.9, -5.8) {};
+\node[anchor=west] at (7.35, -5.8) {Visual path};
+\node[fusionbox, minimum width=0.55cm, minimum height=0.4cm] (l4) at (10.1, -5.8) {};
+\node[anchor=west] at (10.55, -5.8) {Fusion or stacking module};
+\node[draw=black!70, dashed, minimum width=0.55cm, minimum height=0.4cm] (l5) at (14.2, -5.8) {};
+\node[anchor=west] at (14.65, -5.8) {Robustness and parser controls};
+
+\end{tikzpicture}

@@ -1,0 +1,108 @@
+﻿{
+    "timestamp_utc":  "2026-04-12T13:04:09.9660632Z",
+    "failure_count":  0,
+    "checks":  [
+                   {
+                       "name":  "Required file exists: 00_START_HERE.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: STATUS_CHECKLIST.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: PROJECT_GOVERNANCE.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: METRIC_PROVENANCE_LEDGER.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: REPRODUCIBILITY_BUNDLE.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: BUILD.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: stage_submission_bundle.ps1",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: trigger_manuscript_ci.ps1",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: seif_paper_revised.tex",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: figures/final_publishable_architecture_tikz.tex",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: .github/workflows/build-manuscript.yml",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "MELD stacked peak overall_best_f1",
+                       "passed":  true,
+                       "expected":  "0.7156010684240085",
+                       "actual":  "0.715601068424009"
+                   },
+                   {
+                       "name":  "MELD 3-model stack ablation[3].wf1",
+                       "passed":  true,
+                       "expected":  "0.7153",
+                       "actual":  "0.7153"
+                   },
+                   {
+                       "name":  "MELD-\u003eIEMOCAP zero_shot weighted_f1",
+                       "passed":  true,
+                       "expected":  "49.04",
+                       "actual":  "49.04"
+                   },
+                   {
+                       "name":  "Distilled checkpoint-average evidence line present",
+                       "passed":  true,
+                       "expected":  "\u003e=1 match for \"Test WF1: 0.6829\"",
+                       "actual":  "matches=1"
+                   },
+                   {
+                       "name":  "Additive fusion stress evidence line present",
+                       "passed":  true,
+                       "expected":  "\u003e=1 match for \"Best dev WF1: 0.4955\"",
+                       "actual":  "matches=1"
+                   },
+                   {
+                       "name":  "Build path available (local or CI)",
+                       "passed":  true,
+                       "expected":  "local LaTeX tools OR .github/workflows/build-manuscript.yml present",
+                       "actual":  "local_tools=False; ci_workflow=True; tools=none"
+                   }
+               ]
+}
