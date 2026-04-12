@@ -58,6 +58,7 @@ $requiredFiles = @(
     'PROJECT_GOVERNANCE.md',
     'METRIC_PROVENANCE_LEDGER.md',
     'RESULTS_TRACEABILITY.md',
+    'MODEL_RISK_GATES.md',
     'REPRODUCIBILITY_BUNDLE.md',
     'BUILD.md',
     'stage_submission_bundle.ps1',
@@ -115,6 +116,28 @@ try {
     Add-CheckResult -Name 'Additive fusion stress evidence line present' -Passed $pass -Actual $actual -Expected '>=1 match for "Best dev WF1: 0.4955"'
 } catch {
     Add-CheckResult -Name 'Additive fusion stress evidence line present' -Passed $false -Actual $_.Exception.Message -Expected 'Readable log file'
+}
+
+try {
+    $risk = Get-Content .\outputs\recovery_R9b_kd_k4_fullDev\metrics_best.json | ConvertFrom-Json
+
+    $hasCore = ($null -ne $risk.dev_weighted_f1) -and ($null -ne $risk.dev_macro_f1) -and ($null -ne $risk.neutral_prediction_ratio)
+    $hasTail = ($null -ne $risk.per_class_f1) -and ($null -ne $risk.per_class_f1.fear) -and ($null -ne $risk.per_class_f1.disgust)
+    $riskFieldsPass = $hasCore -and $hasTail
+
+    $riskActual = "dev_wf1={0}; dev_macro_f1={1}; neutral_ratio={2}; fear_f1={3}; disgust_f1={4}" -f $risk.dev_weighted_f1, $risk.dev_macro_f1, $risk.neutral_prediction_ratio, $risk.per_class_f1.fear, $risk.per_class_f1.disgust
+    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/neutral/tail)' -Passed $riskFieldsPass -Actual $riskActual -Expected 'metrics_best.json includes dev_weighted_f1, dev_macro_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust'
+
+    $gateMacro = [bool]$risk.checkpoint_promotion_gates.macro_pass
+    $gateMinority = [bool]$risk.checkpoint_promotion_gates.minority_pass
+    $gateNeutral = [bool]$risk.checkpoint_promotion_gates.neutral_pass
+    $promotionPass = $gateMacro -and $gateMinority -and $gateNeutral
+
+    $gateActual = "macro_pass={0}; minority_pass={1}; neutral_pass={2}" -f $gateMacro, $gateMinority, $gateNeutral
+    Add-CheckResult -Name 'Recovery checkpoint promotion gates passed' -Passed $promotionPass -Actual $gateActual -Expected 'macro_pass=true, minority_pass=true, neutral_pass=true'
+} catch {
+    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/neutral/tail)' -Passed $false -Actual $_.Exception.Message -Expected 'Readable outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json'
+    Add-CheckResult -Name 'Recovery checkpoint promotion gates passed' -Passed $false -Actual $_.Exception.Message -Expected 'macro_pass=true, minority_pass=true, neutral_pass=true'
 }
 
 $latexmk = Get-Command latexmk -ErrorAction SilentlyContinue

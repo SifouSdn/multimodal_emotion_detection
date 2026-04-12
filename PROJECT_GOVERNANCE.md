@@ -12,6 +12,7 @@ This file defines the canonical project entry points and status sources to preve
 - Primary architecture figure source: `figures/final_publishable_architecture_tikz.tex`
 - Primary metric provenance ledger: `METRIC_PROVENANCE_LEDGER.md`
 - Primary metric traceability map: `RESULTS_TRACEABILITY.md`
+- Primary model risk gate policy: `MODEL_RISK_GATES.md`
 - Primary reproducibility bundle skeleton: `REPRODUCIBILITY_BUNDLE.md`
 - Primary manuscript build runbook: `BUILD.md`
 - Primary one-command verification script: `verify_submission_bundle.ps1`

@@ -138,6 +138,7 @@ IEMOCAP in-domain reference model & 81.91\% & 82.27\% \\
 \end{table*}
 
 The 49.04\% zero-shot result shows that MELD pretraining alone does not transfer reliably to IEMOCAP. This domain shift motivated later architecture-level controls for modality alignment, calibration, and robustness rather than relying on retrieval or ensembling alone.
+In this submission freeze, canonical cross-corpus evidence is reported for the MELD\,$\rightarrow$\,IEMOCAP direction only; reverse-direction zero-shot transfer (IEMOCAP\,$\rightarrow$\,MELD) is deferred to future validation.
 
 \subsection{Direct Acoustic Integration}
 \begin{table*}[htbp]
@@ -205,6 +206,7 @@ Stabilized imbalance-aware and KD-assisted regime & 57.87\% (dev) & -- & 61.1\% 
 \end{table*}
 
 The parser correction does not artificially inflate scores; it removes fallback artifacts and exposes true model behavior. In parallel, imbalance-aware controls reduce extreme neutral dominance, but fear/disgust remain the hardest unresolved classes in current recovery trajectories.
+For release screening, weighted F1 should not be used alone; macro-F1, neutral-collapse ratio, and tail-class (fear/disgust) visibility should be checked jointly.
 
 \section{Conclusion}
 A 50+ configuration synthesis shows a consistent pattern. Text-centric transfer-aware stacking remains the strongest performer, with the best artifact-backed value at 71.56\% weighted F1. Direct acoustic integration is necessary for modality completeness but requires strict architectural safeguards; otherwise, additive pathways can collapse. Temporal compression and projector studies indicate that compact Perceiver bottlenecks offer a strong efficiency-stability compromise against large token-concatenation projectors. Finally, robustness analysis demonstrates that evaluation reliability fixes and imbalance-aware controls are mandatory for trustworthy reporting, even when headline weighted F1 improves.

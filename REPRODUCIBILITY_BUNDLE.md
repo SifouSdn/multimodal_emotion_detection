@@ -51,6 +51,7 @@ Expected behavior:
 - Governance policy: `PROJECT_GOVERNANCE.md`
 - Metric provenance ledger: `METRIC_PROVENANCE_LEDGER.md`
 - Metric traceability map: `RESULTS_TRACEABILITY.md`
+- Model risk gate policy: `MODEL_RISK_GATES.md`
 - Active status snapshot: `STATUS_CHECKLIST.md`
 
 ## Headline Metric Verification (PowerShell)

@@ -1,5 +1,5 @@
 ﻿{
-    "timestamp_utc":  "2026-04-12T13:35:55.2236501Z",
+    "timestamp_utc":  "2026-04-12T13:40:39.5053035Z",
     "failure_count":  0,
     "checks":  [
                    {
@@ -28,6 +28,12 @@
                    },
                    {
                        "name":  "Required file exists: RESULTS_TRACEABILITY.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: MODEL_RISK_GATES.md",
                        "passed":  true,
                        "expected":  "True",
                        "actual":  "True"
@@ -103,6 +109,18 @@
                        "passed":  true,
                        "expected":  "\u003e=1 match for \"Best dev WF1: 0.4955\"",
                        "actual":  "matches=1"
+                   },
+                   {
+                       "name":  "Risk gate metrics present (weighted/macro/neutral/tail)",
+                       "passed":  true,
+                       "expected":  "metrics_best.json includes dev_weighted_f1, dev_macro_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust",
+                       "actual":  "dev_wf1=0.5787149114846841; dev_macro_f1=0.3873003261198753; neutral_ratio=0.6113615870153292; fear_f1=0.0; disgust_f1=0.0"
+                   },
+                   {
+                       "name":  "Recovery checkpoint promotion gates passed",
+                       "passed":  true,
+                       "expected":  "macro_pass=true, minority_pass=true, neutral_pass=true",
+                       "actual":  "macro_pass=True; minority_pass=True; neutral_pass=True"
                    },
                    {
                        "name":  "Build readiness proven (local tools or successful CI artifact)",
