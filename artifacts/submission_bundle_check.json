@@ -1,5 +1,5 @@
 ﻿{
-    "timestamp_utc":  "2026-04-12T13:33:11.6805208Z",
+    "timestamp_utc":  "2026-04-12T13:35:55.2236501Z",
     "failure_count":  0,
     "checks":  [
                    {
@@ -22,6 +22,12 @@
                    },
                    {
                        "name":  "Required file exists: METRIC_PROVENANCE_LEDGER.md",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
+                       "name":  "Required file exists: RESULTS_TRACEABILITY.md",
                        "passed":  true,
                        "expected":  "True",
                        "actual":  "True"

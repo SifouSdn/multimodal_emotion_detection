@@ -5,6 +5,7 @@ Last updated: 2026-04-12
 ## Policy
 - Only artifact-backed values should be used for manuscript headline claims.
 - If a value is currently doc-backed only, keep it as provisional until a machine-readable artifact path is located.
+- For script-level reproduction entry points and commands, use `RESULTS_TRACEABILITY.md`.
 
 ## Canonical Headline Selection
 - Selected MELD stacked peak weighted F1: **71.56%**

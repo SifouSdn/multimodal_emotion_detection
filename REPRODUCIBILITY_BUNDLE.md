@@ -50,6 +50,7 @@ Expected behavior:
 - Architecture figure source: `figures/final_publishable_architecture_tikz.tex`
 - Governance policy: `PROJECT_GOVERNANCE.md`
 - Metric provenance ledger: `METRIC_PROVENANCE_LEDGER.md`
+- Metric traceability map: `RESULTS_TRACEABILITY.md`
 - Active status snapshot: `STATUS_CHECKLIST.md`
 
 ## Headline Metric Verification (PowerShell)

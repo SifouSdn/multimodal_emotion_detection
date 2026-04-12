@@ -12,6 +12,7 @@ This section is the current canonical entry point for submission-facing status a
 Primary canonical files:
 - `PROJECT_GOVERNANCE.md`
 - `METRIC_PROVENANCE_LEDGER.md`
+- `RESULTS_TRACEABILITY.md`
 - `STATUS_CHECKLIST.md`
 - `REPRODUCIBILITY_BUNDLE.md`
 - `BUILD.md`

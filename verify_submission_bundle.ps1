@@ -57,6 +57,7 @@ $requiredFiles = @(
     'STATUS_CHECKLIST.md',
     'PROJECT_GOVERNANCE.md',
     'METRIC_PROVENANCE_LEDGER.md',
+    'RESULTS_TRACEABILITY.md',
     'REPRODUCIBILITY_BUNDLE.md',
     'BUILD.md',
     'stage_submission_bundle.ps1',
