@@ -1,5 +1,5 @@
 ﻿{
-    "timestamp_utc":  "2026-04-12T13:15:56.0245615Z",
+    "timestamp_utc":  "2026-04-12T13:33:11.6805208Z",
     "failure_count":  0,
     "checks":  [
                    {
@@ -99,10 +99,10 @@
                        "actual":  "matches=1"
                    },
                    {
-                       "name":  "Build path available (local or CI)",
+                       "name":  "Build readiness proven (local tools or successful CI artifact)",
                        "passed":  true,
-                       "expected":  "local LaTeX tools OR .github/workflows/build-manuscript.yml present",
-                       "actual":  "local_tools=False; ci_workflow=True; tools=none"
+                       "expected":  "local LaTeX tools OR latest Build Manuscript PDF run succeeded with seif_paper_revised-pdf artifact",
+                       "actual":  "local_tools=False; ci_build_proof=True; ci_details=repo=SifouSdn/multimodal_emotion_detection; run_id=24307633979; status=completed; conclusion=success; artifact_present=True; artifact_expired=False; tools=none"
                    }
                ]
 }

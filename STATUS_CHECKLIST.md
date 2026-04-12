@@ -1,3 +1,23 @@
+# Canonical Submission Snapshot (April 2026)
+
+This header is the current canonical execution snapshot for submission coordination.
+
+Submission-facing headline references:
+- Use `METRIC_PROVENANCE_LEDGER.md` for artifact-backed headline values.
+- Use `seif_paper_revised.tex` for manuscript-aligned reporting language.
+- Use `verify_submission_bundle.ps1` for one-command readiness checks.
+
+Current submission anchors:
+- MELD stacked peak weighted F1: 71.56%
+- Distilled single-model weighted F1: 68.29%
+- MELD to IEMOCAP zero-shot weighted F1: 49.04%
+
+Historical note:
+- The remainder of this file preserves a legacy Phase 5 MOSEI checklist for audit context.
+- Treat legacy sections below as historical evidence, not current manuscript headline status.
+
+---
+
 # ✅ Phase 5 MOSEI - Complete Status Checklist
 
 ## 🎯 Project Completion Status: 90% ✅

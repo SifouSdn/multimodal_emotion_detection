@@ -1,4 +1,36 @@
-# 🎯 START HERE: Project Complete
+# START HERE: Canonical Submission Entry (April 2026)
+
+This section is the current canonical entry point for submission-facing status and reproducibility.
+
+## Canonical Baseline (Current)
+- MELD stacked peak weighted F1: 71.56% (artifact-backed)
+- MELD 3-model stack weighted F1: 71.53% (artifact-backed)
+- Distilled single-model weighted F1: 68.29% (artifact-backed log)
+- MELD to IEMOCAP zero-shot weighted F1: 49.04% (artifact-backed)
+- Additive fusion stress run (dev): 49.55% (artifact-backed log)
+
+Primary canonical files:
+- `PROJECT_GOVERNANCE.md`
+- `METRIC_PROVENANCE_LEDGER.md`
+- `STATUS_CHECKLIST.md`
+- `REPRODUCIBILITY_BUNDLE.md`
+- `BUILD.md`
+- `verify_submission_bundle.ps1`
+
+Recommended command flow:
+```powershell
+.\verify_submission_bundle.ps1
+.\stage_submission_bundle.ps1 -DryRun
+.\trigger_manuscript_ci.ps1
+```
+
+Historical note:
+- The remainder of this document is a legacy Phase 2C snapshot kept for audit continuity.
+- Do not use legacy 43.34% values below for current manuscript headline claims.
+
+---
+
+# LEGACY SNAPSHOT: Phase 2C Project Complete
 
 **Status**: ✅ **PRODUCTION READY**  
 **Date**: January 12, 2026  

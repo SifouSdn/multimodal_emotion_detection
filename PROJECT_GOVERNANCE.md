@@ -26,6 +26,7 @@ This file defines the canonical project entry points and status sources to preve
 ## Current Canonical Reporting Rule
 - For MELD stacked peak weighted F1, use the strongest artifact-backed value from `outputs/exp13_temporal_ensemble_results.json`:
   - `overall_best_f1 = 0.7156010684240085` (reported as 71.56%).
+- If historical sections remain inside canonical docs for audit context, top-of-file canonical headers must clearly separate active submission values from legacy snapshots.
 
 ## Change Control
 When updating canonical files:

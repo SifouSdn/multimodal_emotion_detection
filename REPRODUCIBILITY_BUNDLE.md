@@ -14,6 +14,7 @@ Expected behavior:
 - Writes `artifacts/submission_bundle_check.json`
 - Returns exit code `0` when all checks pass
 - Returns exit code `1` when one or more checks fail
+- If local LaTeX tools are unavailable, requires proof that the latest `Build Manuscript PDF` CI run completed successfully and published `seif_paper_revised-pdf`.
 
 ## CI Compile Trigger (No Local LaTeX)
 ```powershell

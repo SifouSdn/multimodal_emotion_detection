@@ -32,6 +32,24 @@ function Add-CheckResult {
     }
 }
 
+function Get-GitHubRepoSlug {
+    param([string]$RemoteUrl)
+
+    $pattern = 'github\.com[:/](?<owner>[^/]+)/(?<repo>[^/]+?)(?:\.git)?$'
+    $match = [System.Text.RegularExpressions.Regex]::Match($RemoteUrl, $pattern)
+    if (-not $match.Success) {
+        return $null
+    }
+
+    $owner = $match.Groups['owner'].Value
+    $repo = $match.Groups['repo'].Value
+    if ([string]::IsNullOrWhiteSpace($owner) -or [string]::IsNullOrWhiteSpace($repo)) {
+        return $null
+    }
+
+    return ("{0}/{1}" -f $owner, $repo)
+}
+
 Write-Output '=== Submission Bundle Verification ==='
 
 $requiredFiles = @(
@@ -111,9 +129,57 @@ if ($null -ne $pdflatex) { $actualTools += 'pdflatex' }
 if ($null -ne $bibtex) { $actualTools += 'bibtex' }
 if ($actualTools.Count -eq 0) { $actualTools = @('none') }
 
-$buildPathReady = $localToolsReady -or $ciWorkflowReady
-$actualBuildPath = "local_tools={0}; ci_workflow={1}; tools={2}" -f $localToolsReady, $ciWorkflowReady, ($actualTools -join ', ')
-Add-CheckResult -Name 'Build path available (local or CI)' -Passed $buildPathReady -Actual $actualBuildPath -Expected 'local LaTeX tools OR .github/workflows/build-manuscript.yml present'
+$ciBuildProven = $false
+$ciBuildActual = 'not-checked'
+
+if ($ciWorkflowReady) {
+    try {
+        $originUrl = (& git remote get-url origin 2>$null)
+        if (($LASTEXITCODE -ne 0) -or [string]::IsNullOrWhiteSpace($originUrl)) {
+            throw [System.Exception]::new('git remote origin is missing')
+        }
+
+        $originUrl = $originUrl.Trim()
+        $repoSlug = Get-GitHubRepoSlug -RemoteUrl $originUrl
+        if ([string]::IsNullOrWhiteSpace($repoSlug)) {
+            throw [System.Exception]::new(("origin is not a GitHub remote: {0}" -f $originUrl))
+        }
+
+        $headers = @{
+            Accept = 'application/vnd.github+json'
+            'User-Agent' = 'submission-bundle-verifier'
+        }
+
+        $runsUri = "https://api.github.com/repos/{0}/actions/workflows/build-manuscript.yml/runs?per_page=1" -f $repoSlug
+        $runsResponse = Invoke-RestMethod -Headers $headers -Uri $runsUri -Method Get
+        $latestRun = @($runsResponse.workflow_runs) | Select-Object -First 1
+        if ($null -eq $latestRun) {
+            throw [System.Exception]::new('no workflow runs found for build-manuscript.yml')
+        }
+
+        $runId = [string]$latestRun.id
+        $runStatus = [string]$latestRun.status
+        $runConclusion = [string]$latestRun.conclusion
+
+        $artifactUri = "https://api.github.com/repos/{0}/actions/runs/{1}/artifacts" -f $repoSlug, $runId
+        $artifactResponse = Invoke-RestMethod -Headers $headers -Uri $artifactUri -Method Get
+        $artifact = @($artifactResponse.artifacts) | Where-Object { $_.name -eq 'seif_paper_revised-pdf' } | Select-Object -First 1
+
+        $artifactPresent = $null -ne $artifact
+        $artifactExpired = if ($artifactPresent) { [bool]$artifact.expired } else { $true }
+
+        $ciBuildProven = ($runStatus -eq 'completed') -and ($runConclusion -eq 'success') -and $artifactPresent -and (-not $artifactExpired)
+        $ciBuildActual = "repo={0}; run_id={1}; status={2}; conclusion={3}; artifact_present={4}; artifact_expired={5}" -f $repoSlug, $runId, $runStatus, $runConclusion, $artifactPresent, $artifactExpired
+    } catch {
+        $ciBuildActual = "unverified: {0}" -f $_.Exception.Message
+    }
+} else {
+    $ciBuildActual = 'unverified: .github/workflows/build-manuscript.yml missing'
+}
+
+$buildReadinessProven = $localToolsReady -or $ciBuildProven
+$actualBuildReadiness = "local_tools={0}; ci_build_proof={1}; ci_details={2}; tools={3}" -f $localToolsReady, $ciBuildProven, $ciBuildActual, ($actualTools -join ', ')
+Add-CheckResult -Name 'Build readiness proven (local tools or successful CI artifact)' -Passed $buildReadinessProven -Actual $actualBuildReadiness -Expected 'local LaTeX tools OR latest Build Manuscript PDF run succeeded with seif_paper_revised-pdf artifact'
 
 $reportDir = '.\artifacts'
 if (-not (Test-Path $reportDir)) {

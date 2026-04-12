@@ -77,6 +77,7 @@ A build is considered valid when:
 - job exits successfully,
 - artifact contains `seif_paper_revised.pdf`,
 - no unresolved-reference warnings remain in logs after final pass.
+- when local LaTeX tools are absent, `verify_submission_bundle.ps1` confirms latest CI run success plus artifact publication.
 
 ## Notes
 - If local build tools are absent, use the CI path above.
