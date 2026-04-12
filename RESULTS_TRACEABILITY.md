@@ -11,7 +11,7 @@ This file links each canonical manuscript metric claim to:
 
 Use this file together with `METRIC_PROVENANCE_LEDGER.md` for submission audits.
 
-## Canonical Claims (M01-M09)
+## Canonical Claims (M01-M10)
 
 | Claim ID | Metric | Artifact | Producer Script | Reproduction Command | Verification Command | Notes |
 |---|---|---|---|---|---|---|
@@ -24,6 +24,7 @@ Use this file together with `METRIC_PROVENANCE_LEDGER.md` for submission audits.
 | M07 | Distilled single-model weighted F1 (68.29%) | `outputs/exp32_v3_avg_results.log` (`Test WF1: 0.6829`) | `checkpoint_avg_exp32.py` (uses `train_exp32_distill_deep.py` checkpoints) | `python .\checkpoint_avg_exp32.py | Tee-Object -FilePath .\outputs\exp32_v3_avg_results.log` | `Select-String -Path .\outputs\exp32_v3_avg_results.log -Pattern "Test WF1: 0.6829" -Encoding Unicode` | Log is UTF-16; use `-Encoding Unicode` for search. |
 | M08 | Naive additive fusion weighted F1 (49.55%, dev) | `outputs/exp31_deep_v11/train_log.txt` (`Best dev WF1: 0.4955`) | `train_exp31_deep_alignment.py` | `python .\train_exp31_deep_alignment.py --fusion_mode fixed --fixed_alpha 0.1 --output_dir outputs/exp31_deep_v11` | `Select-String -Path .\outputs\exp31_deep_v11\train_log.txt -Pattern "Best dev WF1: 0.4955"` | Dev stress run; not a test-set headline. |
 | M09 | Recovery branch dev weighted F1 (57.87%) | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` (`dev_weighted_f1`) | `train.py` | `python .\train.py --output_dir outputs/recovery_R9b_kd_k4_fullDev --projector_type perceiver --num_audio_tokens 4 --skip_projector_checkpoint_load --scheduler_type linear --warmup_steps 40 --min_lr_ratio 0.1 --sampling_strategy shuffle --loss_strategy ce --use_kd --kd_alpha 0.3 --kd_temperature 2.0 --checkpoint_macro_f1_min 0.10 --checkpoint_minority_f1_min 0.02 --checkpoint_neutral_ratio_max 0.85 --eval_every_steps 80 --dev_eval_batches 0 --max_steps 320 --max_train_minutes 240 --batch_size 2 --grad_accum 4 --num_workers 0 --seed 42` | `(Get-Content .\outputs\recovery_R9b_kd_k4_fullDev\metrics_best.json | ConvertFrom-Json).dev_weighted_f1` | Reproduction command captured from `run_manifest.jsonl`. |
+| M10 | Tail-risk audit snapshot (macro/minority/neutral/fear-disgust) | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` (`dev_macro_f1`, `minority_mean_f1`, `neutral_prediction_ratio`, `per_class_f1.fear`, `per_class_f1.disgust`) | `train.py` | Same run command as M09 | `($m=Get-Content .\outputs\recovery_R9b_kd_k4_fullDev\metrics_best.json | ConvertFrom-Json); $m.dev_macro_f1; $m.minority_mean_f1; $m.neutral_prediction_ratio; $m.per_class_f1.fear; $m.per_class_f1.disgust` | Canonical tail-risk reporting for Table `tab:tail_risk_audit`. |
 
 ## Notes
 - The one-command verification script (`verify_submission_bundle.ps1`) checks artifact values and evidence lines, but this file supplies explicit producer entry points.

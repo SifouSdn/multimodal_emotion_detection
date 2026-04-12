@@ -129,6 +129,7 @@ This theme confirms that diversity, not only single-model peak score, drives the
 \midrule
 MELD in-domain LR stack reference & 70.47\% & -- \\
 Zero-shot MELD\,$\rightarrow$\,IEMOCAP (same LR stack) & 49.04\% & -- \\
+Zero-shot IEMOCAP\,$\rightarrow$\,MELD (current freeze) & -- & -- \\
 IEMOCAP in-domain reference model & 81.91\% & 82.27\% \\
 \bottomrule
 \end{tabular}%
@@ -207,6 +208,22 @@ Stabilized imbalance-aware and KD-assisted regime & 57.87\% (dev) & -- & 61.1\% 
 
 The parser correction does not artificially inflate scores; it removes fallback artifacts and exposes true model behavior. In parallel, imbalance-aware controls reduce extreme neutral dominance, but fear/disgust remain the hardest unresolved classes in current recovery trajectories.
 For release screening, weighted F1 should not be used alone; macro-F1, neutral-collapse ratio, and tail-class (fear/disgust) visibility should be checked jointly.
+
+\begin{table*}[htbp]
+\centering
+\small
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{p{0.35\linewidth}ccccc}
+\toprule
+\textbf{Risk Audit Checkpoint} & \textbf{Dev W-F1} & \textbf{Dev Macro-F1} & \textbf{Minority Mean F1} & \textbf{Neutral Ratio} & \textbf{Fear/Disgust F1} \\
+\midrule
+Recovery R9b KD k4 full-dev reference & 57.87\% & 38.73\% & 11.74\% & 61.1\% & 0.00 / 0.00 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Tail-risk audit snapshot from canonical recovery checkpoint (\texttt{outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json}). Promotion gates pass on macro/minority/neutral controls, while fear and disgust remain unresolved.}
+\label{tab:tail_risk_audit}
+\end{table*}
 
 \section{Conclusion}
 A 50+ configuration synthesis shows a consistent pattern. Text-centric transfer-aware stacking remains the strongest performer, with the best artifact-backed value at 71.56\% weighted F1. Direct acoustic integration is necessary for modality completeness but requires strict architectural safeguards; otherwise, additive pathways can collapse. Temporal compression and projector studies indicate that compact Perceiver bottlenecks offer a strong efficiency-stability compromise against large token-concatenation projectors. Finally, robustness analysis demonstrates that evaluation reliability fixes and imbalance-aware controls are mandatory for trustworthy reporting, even when headline weighted F1 improves.

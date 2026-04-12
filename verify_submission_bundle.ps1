@@ -74,6 +74,38 @@ foreach ($f in $requiredFiles) {
 }
 
 try {
+    $paperText = Get-Content .\seif_paper_revised.tex -Raw
+
+    $reverseCoverageRow = 'Zero-shot IEMOCAP\,$\rightarrow$\,MELD (current freeze) & -- & --'
+    $reverseCoveragePass = $paperText.Contains($reverseCoverageRow)
+    $reverseCoverageActual = if ($reverseCoveragePass) { 'present' } else { 'missing explicit reverse-direction freeze row' }
+    Add-CheckResult -Name 'Cross-corpus reverse-direction scope row present in manuscript' -Passed $reverseCoveragePass -Actual $reverseCoverageActual -Expected $reverseCoverageRow
+
+    $tailRiskTokens = @(
+        '\label{tab:tail_risk_audit}',
+        '57.87\%',
+        '38.73\%',
+        '11.74\%',
+        '61.1\%',
+        '0.00 / 0.00'
+    )
+
+    $missingTailTokens = @()
+    foreach ($token in $tailRiskTokens) {
+        if (-not $paperText.Contains($token)) {
+            $missingTailTokens += $token
+        }
+    }
+
+    $tailRiskPass = $missingTailTokens.Count -eq 0
+    $tailRiskActual = if ($tailRiskPass) { 'all expected tokens present' } else { 'missing: ' + ($missingTailTokens -join '; ') }
+    Add-CheckResult -Name 'Tail-risk audit table tokens present in manuscript' -Passed $tailRiskPass -Actual $tailRiskActual -Expected 'label + 57.87%, 38.73%, 11.74%, 61.1%, 0.00 / 0.00'
+} catch {
+    Add-CheckResult -Name 'Cross-corpus reverse-direction scope row present in manuscript' -Passed $false -Actual $_.Exception.Message -Expected 'Readable manuscript tex file'
+    Add-CheckResult -Name 'Tail-risk audit table tokens present in manuscript' -Passed $false -Actual $_.Exception.Message -Expected 'Readable manuscript tex file'
+}
+
+try {
     $exp13 = Get-Content .\outputs\exp13_temporal_ensemble_results.json | ConvertFrom-Json
     $val = [double]$exp13.overall_best_f1
     $pass = [math]::Abs($val - 0.7156010684240085) -lt 1e-12
@@ -121,12 +153,12 @@ try {
 try {
     $risk = Get-Content .\outputs\recovery_R9b_kd_k4_fullDev\metrics_best.json | ConvertFrom-Json
 
-    $hasCore = ($null -ne $risk.dev_weighted_f1) -and ($null -ne $risk.dev_macro_f1) -and ($null -ne $risk.neutral_prediction_ratio)
+    $hasCore = ($null -ne $risk.dev_weighted_f1) -and ($null -ne $risk.dev_macro_f1) -and ($null -ne $risk.minority_mean_f1) -and ($null -ne $risk.neutral_prediction_ratio)
     $hasTail = ($null -ne $risk.per_class_f1) -and ($null -ne $risk.per_class_f1.fear) -and ($null -ne $risk.per_class_f1.disgust)
     $riskFieldsPass = $hasCore -and $hasTail
 
-    $riskActual = "dev_wf1={0}; dev_macro_f1={1}; neutral_ratio={2}; fear_f1={3}; disgust_f1={4}" -f $risk.dev_weighted_f1, $risk.dev_macro_f1, $risk.neutral_prediction_ratio, $risk.per_class_f1.fear, $risk.per_class_f1.disgust
-    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/neutral/tail)' -Passed $riskFieldsPass -Actual $riskActual -Expected 'metrics_best.json includes dev_weighted_f1, dev_macro_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust'
+    $riskActual = "dev_wf1={0}; dev_macro_f1={1}; minority_f1={2}; neutral_ratio={3}; fear_f1={4}; disgust_f1={5}" -f $risk.dev_weighted_f1, $risk.dev_macro_f1, $risk.minority_mean_f1, $risk.neutral_prediction_ratio, $risk.per_class_f1.fear, $risk.per_class_f1.disgust
+    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/minority/neutral/tail)' -Passed $riskFieldsPass -Actual $riskActual -Expected 'metrics_best.json includes dev_weighted_f1, dev_macro_f1, minority_mean_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust'
 
     $gateMacro = [bool]$risk.checkpoint_promotion_gates.macro_pass
     $gateMinority = [bool]$risk.checkpoint_promotion_gates.minority_pass
@@ -136,7 +168,7 @@ try {
     $gateActual = "macro_pass={0}; minority_pass={1}; neutral_pass={2}" -f $gateMacro, $gateMinority, $gateNeutral
     Add-CheckResult -Name 'Recovery checkpoint promotion gates passed' -Passed $promotionPass -Actual $gateActual -Expected 'macro_pass=true, minority_pass=true, neutral_pass=true'
 } catch {
-    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/neutral/tail)' -Passed $false -Actual $_.Exception.Message -Expected 'Readable outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json'
+    Add-CheckResult -Name 'Risk gate metrics present (weighted/macro/minority/neutral/tail)' -Passed $false -Actual $_.Exception.Message -Expected 'Readable outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json'
     Add-CheckResult -Name 'Recovery checkpoint promotion gates passed' -Passed $false -Actual $_.Exception.Message -Expected 'macro_pass=true, minority_pass=true, neutral_pass=true'
 }
 

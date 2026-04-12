@@ -1,5 +1,5 @@
 ﻿{
-    "timestamp_utc":  "2026-04-12T13:40:39.5053035Z",
+    "timestamp_utc":  "2026-04-12T13:44:38.3224514Z",
     "failure_count":  0,
     "checks":  [
                    {
@@ -81,6 +81,18 @@
                        "actual":  "True"
                    },
                    {
+                       "name":  "Cross-corpus reverse-direction scope row present in manuscript",
+                       "passed":  true,
+                       "expected":  "Zero-shot IEMOCAP\\,$\\rightarrow$\\,MELD (current freeze) \u0026 -- \u0026 --",
+                       "actual":  "present"
+                   },
+                   {
+                       "name":  "Tail-risk audit table tokens present in manuscript",
+                       "passed":  true,
+                       "expected":  "label + 57.87%, 38.73%, 11.74%, 61.1%, 0.00 / 0.00",
+                       "actual":  "all expected tokens present"
+                   },
+                   {
                        "name":  "MELD stacked peak overall_best_f1",
                        "passed":  true,
                        "expected":  "0.7156010684240085",
@@ -111,10 +123,10 @@
                        "actual":  "matches=1"
                    },
                    {
-                       "name":  "Risk gate metrics present (weighted/macro/neutral/tail)",
+                       "name":  "Risk gate metrics present (weighted/macro/minority/neutral/tail)",
                        "passed":  true,
-                       "expected":  "metrics_best.json includes dev_weighted_f1, dev_macro_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust",
-                       "actual":  "dev_wf1=0.5787149114846841; dev_macro_f1=0.3873003261198753; neutral_ratio=0.6113615870153292; fear_f1=0.0; disgust_f1=0.0"
+                       "expected":  "metrics_best.json includes dev_weighted_f1, dev_macro_f1, minority_mean_f1, neutral_prediction_ratio, per_class_f1.fear, per_class_f1.disgust",
+                       "actual":  "dev_wf1=0.5787149114846841; dev_macro_f1=0.3873003261198753; minority_f1=0.11737089201877933; neutral_ratio=0.6113615870153292; fear_f1=0.0; disgust_f1=0.0"
                    },
                    {
                        "name":  "Recovery checkpoint promotion gates passed",
@@ -126,7 +138,7 @@
                        "name":  "Build readiness proven (local tools or successful CI artifact)",
                        "passed":  true,
                        "expected":  "local LaTeX tools OR latest Build Manuscript PDF run succeeded with seif_paper_revised-pdf artifact",
-                       "actual":  "local_tools=False; ci_build_proof=True; ci_details=repo=SifouSdn/multimodal_emotion_detection; run_id=24307633979; status=completed; conclusion=success; artifact_present=True; artifact_expired=False; tools=none"
+                       "actual":  "local_tools=False; ci_build_proof=True; ci_details=repo=SifouSdn/multimodal_emotion_detection; run_id=24308069385; status=completed; conclusion=success; artifact_present=True; artifact_expired=False; tools=none"
                    }
                ]
 }

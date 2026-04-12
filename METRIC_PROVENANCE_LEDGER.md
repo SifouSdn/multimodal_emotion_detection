@@ -25,6 +25,7 @@ Last updated: 2026-04-12
 | M07 | Distilled single-model weighted F1 (checkpoint average) | 68.29% | `outputs/exp32_v3_avg_results.log` | `Test WF1: 0.6829` and weighted-average report line | artifact-backed (log) | Averaged checkpoints [800, 1100], aligned with Exp 32 v3 averaging note |
 | M08 | Naive additive fusion weighted F1 (fixed alpha=0.1, dev stress test) | 49.55% | `outputs/exp31_deep_v11/train_log.txt` | `Eval @ step 1700: WF1=0.4955` and `Best dev WF1: 0.4955` | artifact-backed (log) | Additive fusion degradation in fixed-alpha stress run |
 | M09 | Recovery branch dev weighted F1 | 57.87% | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` | `dev_weighted_f1` | artifact-backed | Raw value `0.5787149114846841` |
+| M10 | Tail-risk audit snapshot (recovery branch) | Macro 38.73%; Minority 11.74%; Neutral 61.1%; Fear/Disgust 0.00/0.00 | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` | `dev_macro_f1`, `minority_mean_f1`, `neutral_prediction_ratio`, `per_class_f1.fear`, `per_class_f1.disgust` | artifact-backed | Table-level risk context; raw values `0.3873003261198753`, `0.11737089201877933`, `0.6113615870153292`, `0.0`, `0.0` |
 
 ## Open Provenance Tasks
 1. Confirm manuscript wording keeps split context explicit where needed (for example, mark additive stress metric as dev-derived).
