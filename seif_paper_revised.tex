@@ -129,6 +129,7 @@ This theme confirms that diversity, not only single-model peak score, drives the
 \midrule
 MELD in-domain LR stack reference & 70.47\% & -- \\
 Zero-shot MELD\,$\rightarrow$\,IEMOCAP (same LR stack) & 49.04\% & -- \\
+Calibrated MELD\,$\rightarrow$\,IEMOCAP (prior-shift correction) & 49.91\% & 49.88\% \\
 Zero-shot IEMOCAP\,$\rightarrow$\,MELD (current freeze) & -- & -- \\
 IEMOCAP in-domain reference model & 81.91\% & 82.27\% \\
 \bottomrule
@@ -138,7 +139,7 @@ IEMOCAP in-domain reference model & 81.91\% & 82.27\% \\
 \label{tab:cross_corpus_drop}
 \end{table*}
 
-The 49.04\% zero-shot result shows that MELD pretraining alone does not transfer reliably to IEMOCAP. This domain shift motivated later architecture-level controls for modality alignment, calibration, and robustness rather than relying on retrieval or ensembling alone.
+The 49.04\% zero-shot result shows that MELD pretraining alone does not transfer reliably to IEMOCAP. A lightweight prior-shift calibration step improves this to 49.91\% weighted F1 (+0.87 points), with paired-bootstrap support ($95\%$ CI $[+0.12,+1.64]$ points; one-sided $p=0.0102$). This domain shift motivated later architecture-level controls for modality alignment, calibration, and robustness rather than relying on retrieval or ensembling alone.
 In this submission freeze, canonical cross-corpus evidence is reported for the MELD\,$\rightarrow$\,IEMOCAP direction only; reverse-direction zero-shot transfer (IEMOCAP\,$\rightarrow$\,MELD) is deferred to future validation.
 
 \subsection{Direct Acoustic Integration}

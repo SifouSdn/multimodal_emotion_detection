@@ -7,6 +7,7 @@ This section is the current canonical entry point for submission-facing status a
 - MELD 3-model stack weighted F1: 71.53% (artifact-backed)
 - Distilled single-model weighted F1: 68.29% (artifact-backed log)
 - MELD to IEMOCAP zero-shot weighted F1: 49.04% (artifact-backed)
+- Calibrated MELD to IEMOCAP weighted F1: 49.91% (+0.87pp, one-sided p=0.0102)
 - Additive fusion stress run (dev): 49.55% (artifact-backed log)
 
 Primary canonical files:

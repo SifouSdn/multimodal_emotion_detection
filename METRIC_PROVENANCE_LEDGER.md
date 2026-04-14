@@ -1,6 +1,6 @@
 # Metric Provenance Ledger
 
-Last updated: 2026-04-12
+Last updated: 2026-04-14
 
 ## Policy
 - Only artifact-backed values should be used for manuscript headline claims.
@@ -26,6 +26,7 @@ Last updated: 2026-04-12
 | M08 | Naive additive fusion weighted F1 (fixed alpha=0.1, dev stress test) | 49.55% | `outputs/exp31_deep_v11/train_log.txt` | `Eval @ step 1700: WF1=0.4955` and `Best dev WF1: 0.4955` | artifact-backed (log) | Additive fusion degradation in fixed-alpha stress run |
 | M09 | Recovery branch dev weighted F1 | 57.87% | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` | `dev_weighted_f1` | artifact-backed | Raw value `0.5787149114846841` |
 | M10 | Tail-risk audit snapshot (recovery branch) | Macro 38.73%; Minority 11.74%; Neutral 61.1%; Fear/Disgust 0.00/0.00 | `outputs/recovery_R9b_kd_k4_fullDev/metrics_best.json` | `dev_macro_f1`, `minority_mean_f1`, `neutral_prediction_ratio`, `per_class_f1.fear`, `per_class_f1.disgust` | artifact-backed | Table-level risk context; raw values `0.3873003261198753`, `0.11737089201877933`, `0.6113615870153292`, `0.0`, `0.0` |
+| M11 | Calibrated MELD->IEMOCAP weighted F1 | 49.91% (+0.87pp) | `outputs/exp10_calibrated_best_v2/final_summary.json` | `point_metrics.calibrated.weighted_f1`, `point_metrics.delta.weighted_f1`, `bootstrap_significance.weighted_f1.p_one_sided_improvement` | artifact-backed | Raw values `0.49913179759914245`, `0.008689906625418464`, `p=0.010197960407918417` |
 
 ## Open Provenance Tasks
 1. Confirm manuscript wording keeps split context explicit where needed (for example, mark additive stress metric as dev-derived).

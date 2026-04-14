@@ -16,6 +16,7 @@ This file defines the canonical project entry points and status sources to preve
 - Primary reproducibility bundle skeleton: `REPRODUCIBILITY_BUNDLE.md`
 - Primary manuscript build runbook: `BUILD.md`
 - Primary one-command verification script: `verify_submission_bundle.ps1`
+- Primary generic significance utility: `paired_bootstrap_significance.py`
 - Primary CI trigger helper script: `trigger_manuscript_ci.ps1`
 - Primary canonical staging helper script: `stage_submission_bundle.ps1`
 

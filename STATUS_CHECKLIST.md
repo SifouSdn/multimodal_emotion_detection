@@ -11,6 +11,7 @@ Current submission anchors:
 - MELD stacked peak weighted F1: 71.56%
 - Distilled single-model weighted F1: 68.29%
 - MELD to IEMOCAP zero-shot weighted F1: 49.04%
+- Calibrated MELD to IEMOCAP weighted F1: 49.91% (+0.87pp, one-sided p=0.0102)
 
 Historical note:
 - The remainder of this file preserves a legacy Phase 5 MOSEI checklist for audit context.

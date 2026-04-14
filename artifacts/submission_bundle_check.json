@@ -1,5 +1,5 @@
 ﻿{
-    "timestamp_utc":  "2026-04-12T13:44:38.3224514Z",
+    "timestamp_utc":  "2026-04-14T09:26:59.0962764Z",
     "failure_count":  0,
     "checks":  [
                    {
@@ -57,6 +57,12 @@
                        "actual":  "True"
                    },
                    {
+                       "name":  "Required file exists: paired_bootstrap_significance.py",
+                       "passed":  true,
+                       "expected":  "True",
+                       "actual":  "True"
+                   },
+                   {
                        "name":  "Required file exists: trigger_manuscript_ci.ps1",
                        "passed":  true,
                        "expected":  "True",
@@ -93,6 +99,12 @@
                        "actual":  "all expected tokens present"
                    },
                    {
+                       "name":  "Calibrated cross-corpus evidence tokens present in manuscript",
+                       "passed":  true,
+                       "expected":  "49.91%, 49.88%, p=0.0102 tokens present",
+                       "actual":  "all expected tokens present"
+                   },
+                   {
                        "name":  "MELD stacked peak overall_best_f1",
                        "passed":  true,
                        "expected":  "0.7156010684240085",
@@ -109,6 +121,18 @@
                        "passed":  true,
                        "expected":  "49.04",
                        "actual":  "49.04"
+                   },
+                   {
+                       "name":  "Calibrated transfer artifact fields present",
+                       "passed":  true,
+                       "expected":  "final_summary.json includes point_metrics + bootstrap_significance.weighted_f1",
+                       "actual":  "uncal_wf1=0.490441890973724; cal_wf1=0.499131797599143; delta_wf1=0.00868990662541846; p=0.0101979604079184; ci95_low=0.00122674872894935"
+                   },
+                   {
+                       "name":  "Calibrated transfer improvement is positive and significant",
+                       "passed":  true,
+                       "expected":  "cal_wf1\u003euncal_wf1, delta_wf1\u003e0, ci95_low\u003e0, p\u003c0.05",
+                       "actual":  "uncal_wf1=0.490441890973724; cal_wf1=0.499131797599143; delta_wf1=0.00868990662541846; p=0.0101979604079184; ci95_low=0.00122674872894935"
                    },
                    {
                        "name":  "Distilled checkpoint-average evidence line present",
@@ -138,7 +162,7 @@
                        "name":  "Build readiness proven (local tools or successful CI artifact)",
                        "passed":  true,
                        "expected":  "local LaTeX tools OR latest Build Manuscript PDF run succeeded with seif_paper_revised-pdf artifact",
-                       "actual":  "local_tools=False; ci_build_proof=True; ci_details=repo=SifouSdn/multimodal_emotion_detection; run_id=24308069385; status=completed; conclusion=success; artifact_present=True; artifact_expired=False; tools=none"
+                       "actual":  "local_tools=True; ci_build_proof=False; ci_details=repo=SifouSdn/multimodal_emotion_detection; run_id=24308147200; status=completed; conclusion=failure; artifact_present=False; artifact_expired=True; tools=latexmk, pdflatex, bibtex"
                    }
                ]
 }

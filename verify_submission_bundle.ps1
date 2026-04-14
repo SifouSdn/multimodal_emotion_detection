@@ -62,6 +62,7 @@ $requiredFiles = @(
     'REPRODUCIBILITY_BUNDLE.md',
     'BUILD.md',
     'stage_submission_bundle.ps1',
+    'paired_bootstrap_significance.py',
     'trigger_manuscript_ci.ps1',
     'seif_paper_revised.tex',
     'figures/final_publishable_architecture_tikz.tex',
@@ -100,9 +101,26 @@ try {
     $tailRiskPass = $missingTailTokens.Count -eq 0
     $tailRiskActual = if ($tailRiskPass) { 'all expected tokens present' } else { 'missing: ' + ($missingTailTokens -join '; ') }
     Add-CheckResult -Name 'Tail-risk audit table tokens present in manuscript' -Passed $tailRiskPass -Actual $tailRiskActual -Expected 'label + 57.87%, 38.73%, 11.74%, 61.1%, 0.00 / 0.00'
+
+    $calibrationTokens = @(
+        '49.91\%',
+        '49.88\%',
+        'p=0.0102'
+    )
+    $missingCalibrationTokens = @()
+    foreach ($token in $calibrationTokens) {
+        if (-not $paperText.Contains($token)) {
+            $missingCalibrationTokens += $token
+        }
+    }
+
+    $calibrationTokenPass = $missingCalibrationTokens.Count -eq 0
+    $calibrationTokenActual = if ($calibrationTokenPass) { 'all expected tokens present' } else { 'missing: ' + ($missingCalibrationTokens -join '; ') }
+    Add-CheckResult -Name 'Calibrated cross-corpus evidence tokens present in manuscript' -Passed $calibrationTokenPass -Actual $calibrationTokenActual -Expected '49.91%, 49.88%, p=0.0102 tokens present'
 } catch {
     Add-CheckResult -Name 'Cross-corpus reverse-direction scope row present in manuscript' -Passed $false -Actual $_.Exception.Message -Expected 'Readable manuscript tex file'
     Add-CheckResult -Name 'Tail-risk audit table tokens present in manuscript' -Passed $false -Actual $_.Exception.Message -Expected 'Readable manuscript tex file'
+    Add-CheckResult -Name 'Calibrated cross-corpus evidence tokens present in manuscript' -Passed $false -Actual $_.Exception.Message -Expected 'Readable manuscript tex file'
 }
 
 try {
@@ -130,6 +148,33 @@ try {
     Add-CheckResult -Name 'MELD->IEMOCAP zero_shot weighted_f1' -Passed $pass -Actual $val -Expected '49.04'
 } catch {
     Add-CheckResult -Name 'MELD->IEMOCAP zero_shot weighted_f1' -Passed $false -Actual $_.Exception.Message -Expected 'Readable JSON with option_a_cross_corpus.lr_stacking_C6.weighted_f1'
+}
+
+try {
+    $cal = Get-Content .\outputs\exp10_calibrated_best_v2\final_summary.json | ConvertFrom-Json
+
+    $wfUncal = [double]$cal.point_metrics.uncalibrated.weighted_f1
+    $wfCal = [double]$cal.point_metrics.calibrated.weighted_f1
+    $wfDelta = [double]$cal.point_metrics.delta.weighted_f1
+    $wfP = [double]$cal.bootstrap_significance.weighted_f1.p_one_sided_improvement
+    $wfCiLow = [double]$cal.bootstrap_significance.weighted_f1.ci95[0]
+
+    $calFieldsPass =
+        ($null -ne $cal.point_metrics) -and
+        ($null -ne $cal.point_metrics.uncalibrated) -and
+        ($null -ne $cal.point_metrics.calibrated) -and
+        ($null -ne $cal.point_metrics.delta) -and
+        ($null -ne $cal.bootstrap_significance) -and
+        ($null -ne $cal.bootstrap_significance.weighted_f1)
+
+    $calFieldsActual = "uncal_wf1={0}; cal_wf1={1}; delta_wf1={2}; p={3}; ci95_low={4}" -f $wfUncal, $wfCal, $wfDelta, $wfP, $wfCiLow
+    Add-CheckResult -Name 'Calibrated transfer artifact fields present' -Passed $calFieldsPass -Actual $calFieldsActual -Expected 'final_summary.json includes point_metrics + bootstrap_significance.weighted_f1'
+
+    $calImprovementPass = ($wfCal -gt $wfUncal) -and ($wfDelta -gt 0) -and ($wfCiLow -gt 0) -and ($wfP -lt 0.05)
+    Add-CheckResult -Name 'Calibrated transfer improvement is positive and significant' -Passed $calImprovementPass -Actual $calFieldsActual -Expected 'cal_wf1>uncal_wf1, delta_wf1>0, ci95_low>0, p<0.05'
+} catch {
+    Add-CheckResult -Name 'Calibrated transfer artifact fields present' -Passed $false -Actual $_.Exception.Message -Expected 'Readable outputs/exp10_calibrated_best_v2/final_summary.json'
+    Add-CheckResult -Name 'Calibrated transfer improvement is positive and significant' -Passed $false -Actual $_.Exception.Message -Expected 'cal_wf1>uncal_wf1, delta_wf1>0, ci95_low>0, p<0.05'
 }
 
 try {
