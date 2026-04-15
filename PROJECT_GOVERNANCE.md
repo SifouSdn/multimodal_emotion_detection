@@ -1,13 +1,13 @@
 # Project Governance (Canonical State)
 
-Last updated: 2026-04-12
+Last updated: 2026-04-14
 
 ## Purpose
 This file defines the canonical project entry points and status sources to prevent conflicting top-level summaries.
 
 ## Canonical Files
 - Primary project entry point: `00_START_HERE.md`
-- Primary execution/status snapshot: `STATUS_CHECKLIST.md`
+- Primary execution/status snapshot and experiment-family registry: `STATUS_CHECKLIST.md`
 - Primary manuscript source: `seif_paper_revised.tex`
 - Primary architecture figure source: `figures/final_publishable_architecture_tikz.tex`
 - Primary metric provenance ledger: `METRIC_PROVENANCE_LEDGER.md`
@@ -25,6 +25,7 @@ This file defines the canonical project entry points and status sources to preve
 2. Historical reports must be moved under `archive/status_docs/`.
 3. Any manuscript headline metric must be traceable in `METRIC_PROVENANCE_LEDGER.md` before being promoted to abstract/conclusion claims.
 4. If multiple values exist for the same metric family (e.g., 71.50/71.53/71.56), the ledger must explicitly record provenance and the selected canonical reporting rule.
+5. Top-level experiment progression reporting must live in `STATUS_CHECKLIST.md`; any alternative storyline summaries belong in `archive/status_docs/`.
 
 ## Current Canonical Reporting Rule
 - For MELD stacked peak weighted F1, use the strongest artifact-backed value from `outputs/exp13_temporal_ensemble_results.json`:

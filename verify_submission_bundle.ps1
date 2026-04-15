@@ -75,6 +75,43 @@ foreach ($f in $requiredFiles) {
 }
 
 try {
+    $statusText = Get-Content .\STATUS_CHECKLIST.md -Raw
+
+    $registryHeader = '## Canonical Experiment Registry (Exp01-Exp53 Families)'
+    $registryPass = $statusText.Contains($registryHeader)
+    $registryActual = if ($registryPass) { 'present' } else { 'missing canonical registry header' }
+    Add-CheckResult -Name 'Canonical experiment registry section present in STATUS_CHECKLIST' -Passed $registryPass -Actual $registryActual -Expected $registryHeader
+
+    $legendToken = 'Status=Canonical'
+    $legendPass = $statusText.Contains($legendToken)
+    $legendActual = if ($legendPass) { 'present' } else { 'missing registry legend token' }
+    Add-CheckResult -Name 'Canonical registry legend token present' -Passed $legendPass -Actual $legendActual -Expected $legendToken
+} catch {
+    Add-CheckResult -Name 'Canonical experiment registry section present in STATUS_CHECKLIST' -Passed $false -Actual $_.Exception.Message -Expected 'Readable STATUS_CHECKLIST.md'
+    Add-CheckResult -Name 'Canonical registry legend token present' -Passed $false -Actual $_.Exception.Message -Expected 'Readable STATUS_CHECKLIST.md'
+}
+
+try {
+    $startHereText = Get-Content .\00_START_HERE.md -Raw
+    $startHereToken = 'Canonical experiment storyline registry: `STATUS_CHECKLIST.md`'
+    $startHerePass = $startHereText.Contains($startHereToken)
+    $startHereActual = if ($startHerePass) { 'present' } else { 'missing STATUS_CHECKLIST registry pointer' }
+    Add-CheckResult -Name '00_START_HERE points to canonical registry' -Passed $startHerePass -Actual $startHereActual -Expected $startHereToken
+} catch {
+    Add-CheckResult -Name '00_START_HERE points to canonical registry' -Passed $false -Actual $_.Exception.Message -Expected 'Readable 00_START_HERE.md'
+}
+
+try {
+    $govText = Get-Content .\PROJECT_GOVERNANCE.md -Raw
+    $govToken = 'Top-level experiment progression reporting must live in `STATUS_CHECKLIST.md`'
+    $govPass = $govText.Contains($govToken)
+    $govActual = if ($govPass) { 'present' } else { 'missing STATUS_CHECKLIST top-level rule' }
+    Add-CheckResult -Name 'Governance enforces STATUS_CHECKLIST as storyline source' -Passed $govPass -Actual $govActual -Expected $govToken
+} catch {
+    Add-CheckResult -Name 'Governance enforces STATUS_CHECKLIST as storyline source' -Passed $false -Actual $_.Exception.Message -Expected 'Readable PROJECT_GOVERNANCE.md'
+}
+
+try {
     $paperText = Get-Content .\seif_paper_revised.tex -Raw
 
     $reverseCoverageRow = 'Zero-shot IEMOCAP\,$\rightarrow$\,MELD (current freeze) & -- & --'

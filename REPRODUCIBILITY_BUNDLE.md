@@ -1,6 +1,6 @@
 # Reproducibility Bundle Skeleton
 
-Last updated: 2026-04-12
+Last updated: 2026-04-14
 
 ## Scope
 This file defines a minimal, submission-oriented reproducibility bundle for this repository.
@@ -89,6 +89,24 @@ Expected: one matching line
 Select-String -Path .\outputs\exp31_deep_v11\train_log.txt -Pattern "Best dev WF1: 0.4955"
 ```
 Expected: one matching line
+
+6) Paired-bootstrap significance reproduction for M11 (+0.87pp, p=0.0102)
+```powershell
+New-Item -ItemType Directory -Force -Path .\outputs\significance | Out-Null
+$labels = Get-Content .\outputs\exp10_calibration_inputs\target_labels.csv
+@('label') + $labels | Set-Content .\outputs\significance\exp10_target_labels.csv
+
+Import-Csv .\outputs\exp10_calibrated_best_v2\target_pred_uncalibrated.csv |
+	Select-Object @{Name='label';Expression={[int][double]$_.pred}} |
+	Export-Csv .\outputs\significance\exp10_pred_uncalibrated_int.csv -NoTypeInformation
+
+Import-Csv .\outputs\exp10_calibrated_best_v2\target_pred_calibrated.csv |
+	Select-Object @{Name='label';Expression={[int][double]$_.pred}} |
+	Export-Csv .\outputs\significance\exp10_pred_calibrated_int.csv -NoTypeInformation
+
+c:/multimodal_emotion_detection/.venv/Scripts/python.exe .\paired_bootstrap_significance.py --labels .\outputs\significance\exp10_target_labels.csv --pred-a .\outputs\significance\exp10_pred_uncalibrated_int.csv --pred-b .\outputs\significance\exp10_pred_calibrated_int.csv --labels-column label --pred-a-column label --pred-b-column label --n-boot 5000 --seed 42 --out-json .\outputs\significance\exp10_calibration_paired_bootstrap.json --out-tex .\outputs\significance\exp10_calibration_paired_bootstrap.tex
+```
+Expected weighted-F1 delta summary: `+0.0087`, CI95 `[+0.0012,+0.0164]`, one-sided `p=0.0102`
 
 ## Manuscript Build Skeleton
 Reference runbook: `BUILD.md`
